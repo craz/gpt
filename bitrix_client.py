@@ -17,3 +17,4 @@ class BitrixClient:
         response = requests.post(url, json=payload, timeout=30)
         response.raise_for_status()
         return response.json()
+
