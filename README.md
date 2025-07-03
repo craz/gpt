@@ -4,10 +4,10 @@ This repository contains a small example script for fetching time log entries fr
 
 ## Usage
 
-1. Create a `.env` file in the project root with the following content:
+1. Copy `.env.example` to `.env` and update the values:
 
 ```
-WEBHOOK_URL=https://<your_portal>.bitrix24.ru/rest/<user_id>/<webhook_key>/
+cp .env.example .env
 ```
 
 2. Install the dependencies in a virtual environment:
