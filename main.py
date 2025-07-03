@@ -1,17 +1,25 @@
 import argparse
 from dotenv import load_dotenv
 
-from bitrix_client import BitrixClient
-from time_log_service import TimeLogService
+from bitrix.client import BitrixClient
+from bitrix.time_log_service import TimeLogService
 
 
 def main() -> None:
-
- main
-    parser = argparse.ArgumentParser(description='Fetch Bitrix24 time logs')
+    """Entry point for the CLI."""
+    parser = argparse.ArgumentParser(
+        description='Fetch Bitrix24 time logs for one or more months'
+    )
     parser.add_argument('--year', type=int, default=2025, help='Start year')
     parser.add_argument('--month', type=int, default=6, help='Start month (1-12)')
-    parser.add_argument('--months', type=int, default=1, help='Number of months to include')
+    parser.add_argument(
+        '--months',
+        type=int,
+        default=2,
+        help='Number of months to include (default: 2)'
+    )
+
+
     parser.add_argument('--show-projects', action='store_true', help='Print list of active projects')
     args = parser.parse_args()
 

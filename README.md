@@ -19,7 +19,8 @@ pip install -r requirements.txt
 ```
 
 3. Run the script. Use `--year` and `--month` to specify the starting month.
-   Set `--months` to span multiple months and pass `--show-projects` to print
+
+   Set `--months` to span multiple months (default is 2) and pass `--show-projects` to print
    the list of active projects for the selected period.
 
 ```bash
