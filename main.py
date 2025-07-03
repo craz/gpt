@@ -1,57 +1,40 @@
-import requests
-import calendar
-from datetime import datetime
+import argparse
 from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-WEBHOOK_BASE = os.getenv('WEBHOOK_URL')
-if not WEBHOOK_BASE:
-    raise RuntimeError('WEBHOOK_URL not found in .env')
-
-WEBHOOK_URL = WEBHOOK_BASE.rstrip('/') + '/task.elapseditem.getlist.json'
-
-YEAR = 2025
-MONTH = 6
+from bitrix_client import BitrixClient
+from time_log_service import TimeLogService
 
 
-def get_month_date_range(year: int, month: int):
-    start = datetime(year, month, 1)
-    last_day = calendar.monthrange(year, month)[1]
-    end = datetime(year, month, last_day, 23, 59, 59)
-    return start, end
+def main() -> None:
+    """Entry point for the CLI."""
+    parser = argparse.ArgumentParser(
+        description='Fetch Bitrix24 time logs for one or more months'
+    )
+    parser.add_argument('--year', type=int, default=2025, help='Start year')
+    parser.add_argument('--month', type=int, default=6, help='Start month (1-12)')
+    parser.add_argument(
+        '--months',
+        type=int,
+        default=2,
+        help='Number of months to include (default: 2)'
+    )
+    parser.add_argument('--show-projects', action='store_true', help='Print list of active projects')
+    args = parser.parse_args()
 
+    load_dotenv()
+    client = BitrixClient()
+    service = TimeLogService(client)
 
-def fetch_time_logs(start_date, end_date, page_size=50):
-    logs = []
-    page = 1
-    while True:
-        payload = [
-            {},
-            {
-                '>=CREATED_DATE': start_date.strftime('%Y-%m-%d'),
-                '<=CREATED_DATE': end_date.strftime('%Y-%m-%d')
-            },
-            ['ID', 'TASK_ID', 'USER_ID', 'CREATED_DATE', 'SECONDS'],
-            {'NAV_PARAMS': {'nPageSize': page_size, 'iNumPage': page}}
-        ]
-        resp = requests.post(WEBHOOK_URL, json=payload, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
-        logs.extend(data.get('result', []))
-        if not data.get('next'):
-            break
-        page += 1
-    return logs
-
-
-def main():
-    start_date, end_date = get_month_date_range(YEAR, MONTH)
-    logs = fetch_time_logs(start_date, end_date)
+    start_date, end_date = service.compute_range(args.year, args.month, args.months)
+    logs = service.fetch_time_logs(start_date, end_date)
     for log in logs:
         print(log)
+
+    if args.show_projects:
+        projects = service.get_active_projects(start_date, end_date)
+        print('Active projects:', sorted(projects))
 
 
 if __name__ == '__main__':
     main()
+

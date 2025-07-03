@@ -18,13 +18,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Run the script:
+3. Run the script. Use `--year` and `--month` to specify the starting month.
+   Set `--months` to span multiple months (default is 2) and pass `--show-projects` to print
+   the list of active projects for the selected period.
 
 ```bash
-python main.py
+python main.py --year 2025 --month 6 --months 2 --show-projects
 ```
 
-The script prints all time log entries for June 2025 using the `task.elapseditem.getlist` method.
+The command above prints all time log entries for June and July 2025 and shows
+the IDs of projects with any activity during that period.
 
 ## Docker
 
