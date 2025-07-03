@@ -18,6 +18,8 @@ def main() -> None:
         default=2,
         help='Number of months to include (default: 2)'
     )
+
+
     parser.add_argument('--show-projects', action='store_true', help='Print list of active projects')
     args = parser.parse_args()
 
