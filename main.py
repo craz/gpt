@@ -6,6 +6,8 @@ from time_log_service import TimeLogService
 
 
 def main() -> None:
+
+ main
     parser = argparse.ArgumentParser(description='Fetch Bitrix24 time logs')
     parser.add_argument('--year', type=int, default=2025, help='Start year')
     parser.add_argument('--month', type=int, default=6, help='Start month (1-12)')
@@ -29,3 +31,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
