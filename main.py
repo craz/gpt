@@ -1,8 +1,8 @@
 import argparse
 from dotenv import load_dotenv
 
-from bitrix_client import BitrixClient
-from time_log_service import TimeLogService
+from bitrix.client import BitrixClient
+from bitrix.time_log_service import TimeLogService
 
 
 def main() -> None:

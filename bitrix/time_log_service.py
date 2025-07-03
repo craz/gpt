@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import calendar
 from typing import List, Dict, Any, Set
 
-from bitrix_client import BitrixClient
+from .client import BitrixClient
 
 
 class TimeLogService:
