@@ -56,16 +56,21 @@ class TimeLogService:
         for task_id in task_ids:
             payload = {'taskId': task_id, 'select': ['ID', 'GROUP_ID']}
             data = self.client.call('tasks.task.get', payload)
+            entries: List[Dict[str, Any]] = []
             if isinstance(data, list):
-                data = data[0] if data else {}
-            if not isinstance(data, dict):
+                entries = [d for d in data if isinstance(d, dict)]
+            elif isinstance(data, dict):
+                entries = [data]
+            else:
                 continue
-            task = data.get('result', {}).get('task')
-            if task and 'GROUP_ID' in task:
-                try:
-                    projects.add(int(task['GROUP_ID']))
-                except (ValueError, TypeError):
-                    continue
+
+            for entry in entries:
+                task = entry.get('result', {}).get('task')
+                if task and 'GROUP_ID' in task:
+                    try:
+                        projects.add(int(task['GROUP_ID']))
+                    except (ValueError, TypeError):
+                        continue
         return projects
 
     def compute_range(self, year: int, month: int, months: int) -> tuple[datetime, datetime]:
