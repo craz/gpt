@@ -56,6 +56,10 @@ class TimeLogService:
         for task_id in task_ids:
             payload = {'taskId': task_id, 'select': ['ID', 'GROUP_ID']}
             data = self.client.call('tasks.task.get', payload)
+            if isinstance(data, list):
+                data = data[0] if data else {}
+            if not isinstance(data, dict):
+                continue
             task = data.get('result', {}).get('task')
             if task and 'GROUP_ID' in task:
                 try:
