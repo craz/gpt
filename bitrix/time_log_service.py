@@ -56,7 +56,6 @@ class TimeLogService:
         for task_id in task_ids:
             payload = {'taskId': task_id, 'select': ['ID', 'GROUP_ID']}
             data = self.client.call('tasks.task.get', payload)
-
             tasks: List[Dict[str, Any]] = []
             if isinstance(data, list):
                 for entry in data:
@@ -86,6 +85,7 @@ class TimeLogService:
                 group_id = task.get('GROUP_ID')
                 if group_id is None:
                     continue
+
                 try:
                     projects.add(int(group_id))
                 except (ValueError, TypeError):
