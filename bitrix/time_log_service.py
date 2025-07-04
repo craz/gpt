@@ -56,10 +56,38 @@ class TimeLogService:
         for task_id in task_ids:
             payload = {'taskId': task_id, 'select': ['ID', 'GROUP_ID']}
             data = self.client.call('tasks.task.get', payload)
-            task = data.get('result', {}).get('task')
-            if task and 'GROUP_ID' in task:
+
+            tasks: List[Dict[str, Any]] = []
+            if isinstance(data, list):
+                for entry in data:
+                    if not isinstance(entry, dict):
+                        continue
+                    result = entry.get('result')
+                    if isinstance(result, dict):
+                        task = result.get('task')
+                        if isinstance(task, dict):
+                            tasks.append(task)
+            elif isinstance(data, dict):
+                result = data.get('result')
+                if isinstance(result, list):
+                    for item in result:
+                        if isinstance(item, dict):
+                            task = item.get('task')
+                            if isinstance(task, dict):
+                                tasks.append(task)
+                elif isinstance(result, dict):
+                    task = result.get('task')
+                    if isinstance(task, dict):
+                        tasks.append(task)
+            else:
+                continue
+
+            for task in tasks:
+                group_id = task.get('GROUP_ID')
+                if group_id is None:
+                    continue
                 try:
-                    projects.add(int(task['GROUP_ID']))
+                    projects.add(int(group_id))
                 except (ValueError, TypeError):
                     continue
         return projects
