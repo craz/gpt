@@ -20,15 +20,15 @@ pip install -r requirements.txt
 
 3. Run the script. Use `--year` and `--month` to specify the starting month.
 
-   Set `--months` to span multiple months (default is 2) and pass `--show-projects` to print
-   the list of active projects for the selected period.
+   Set `--months` to span multiple months (default is 2). By default the script
+   prints all time log entries. Pass `--show-projects` to print **only** the list
+   of active projects for the selected period.
 
 ```bash
 python main.py --year 2025 --month 6 --months 2 --show-projects
 ```
 
-The command above prints all time log entries for June and July 2025 and shows
-the IDs of projects with any activity during that period.
+The command above prints the IDs of projects with any activity during that period.
 
 ## Docker
 
