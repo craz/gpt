@@ -28,13 +28,14 @@ def main() -> None:
     service = TimeLogService(client)
 
     start_date, end_date = service.compute_range(args.year, args.month, args.months)
-    logs = service.fetch_time_logs(start_date, end_date)
-    for log in logs:
-        print(log)
 
     if args.show_projects:
         projects = service.get_active_projects(start_date, end_date)
         print('Active projects:', sorted(projects))
+    else:
+        logs = service.fetch_time_logs(start_date, end_date)
+        for log in logs:
+            print(log)
 
 
 if __name__ == '__main__':
