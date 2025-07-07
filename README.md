@@ -1,12 +1,12 @@
-# Bitrix24 Time Log Fetcher
+# Bitrix24 Project Fetcher
 
-This repository contains a small example script for fetching time log entries from Bitrix24 via the REST API.
+This repository contains a minimal script for retrieving a single project from Bitrix24 via the REST API and saving it to a JSON file.
 
 ## Usage
 
-1. Copy `.env.example` to `.env` and update the values:
+1. Copy `.env.example` to `.env` and update the `WEBHOOK_URL` value.
 
-```
+```bash
 cp .env.example .env
 ```
 
@@ -18,30 +18,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Run the script. Use `--year` and `--month` to specify the starting month.
-
-   Set `--months` to span multiple months (default is 2). By default the script
-   prints all time log entries. Pass `--show-projects` to print **only** the list
-   of active projects for the selected period.
+3. Run the script, passing the desired output path:
 
 ```bash
-python main.py --year 2025 --month 6 --months 2 --show-projects
+python main.py project.json
 ```
 
-The command above prints the IDs of projects with any activity during that period.
+The file `project.json` will contain the first project returned by Bitrix24.
 
 ## Docker
 
-An alternative way to run the script is using Docker.
-
-1. Build the image:
+You can also run the script using Docker:
 
 ```bash
-docker build -t timelog-fetcher .
-```
-
-2. Run the container with the Bitrix24 webhook URL passed via the `WEBHOOK_URL` environment variable:
-
-```bash
-docker run --rm -e WEBHOOK_URL=https://<your_portal>.bitrix24.ru/rest/<user_id>/<webhook_key>/ timelog-fetcher
+docker build -t project-fetcher .
+docker run --rm -e WEBHOOK_URL=https://<portal>.bitrix24.ru/rest/<user_id>/<webhook_key>/ project-fetcher project.json
 ```
