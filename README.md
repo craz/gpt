@@ -30,6 +30,18 @@ python main.py --year 2025 --month 6 --months 2 --show-projects
 
 The command above prints the IDs of projects with any activity during that period.
 
+## Exporting Projects
+
+To export the full list of projects, use ``fetch_projects.py``. The script
+stores all project fields in JSON format::
+
+```bash
+python fetch_projects.py projects.json
+```
+
+Specify ``--webhook-url`` to override the ``WEBHOOK_URL`` environment
+variable or adjust ``--page-size`` if needed.
+
 ## Docker
 
 An alternative way to run the script is using Docker.
