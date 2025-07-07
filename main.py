@@ -1,43 +1,30 @@
 import argparse
+import json
 from dotenv import load_dotenv
 
 from bitrix.client import BitrixClient
-from bitrix.time_log_service import TimeLogService
 
 
 def main() -> None:
-    """Entry point for the CLI."""
-    parser = argparse.ArgumentParser(
-        description='Fetch Bitrix24 time logs for one or more months'
-    )
-    parser.add_argument('--year', type=int, default=2025, help='Start year')
-    parser.add_argument('--month', type=int, default=6, help='Start month (1-12)')
-    parser.add_argument(
-        '--months',
-        type=int,
-        default=2,
-        help='Number of months to include (default: 2)'
-    )
-
-
-    parser.add_argument('--show-projects', action='store_true', help='Print list of active projects')
+    """Fetch a single project from Bitrix24 and save it to a file."""
+    parser = argparse.ArgumentParser(description="Fetch one Bitrix24 project")
+    parser.add_argument("output", help="Path to output JSON file")
     args = parser.parse_args()
 
     load_dotenv()
     client = BitrixClient()
-    service = TimeLogService(client)
+    payload = {
+        "ORDER": {"ID": "ASC"},
+        "FILTER": {},
+        "SELECT": ["*"],
+        "NAV_PARAMS": {"nPageSize": 1, "iNumPage": 1},
+    }
+    data = client.call("sonet_group.get", payload)
+    result = data.get("result", [])
 
-    start_date, end_date = service.compute_range(args.year, args.month, args.months)
-
-    if args.show_projects:
-        projects = service.get_active_projects(start_date, end_date)
-        print('Active projects:', sorted(projects))
-    else:
-        logs = service.fetch_time_logs(start_date, end_date)
-        for log in logs:
-            print(log)
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
